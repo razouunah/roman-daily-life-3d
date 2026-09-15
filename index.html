@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Daily Life in Ancient Rome — 3D Model</title>
+  <meta name="description" content="An interactive 3D model of a Roman domus and street scene.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%237a2f22'/%3E%3Cpath d='M10 26L32 10l22 16H10zm7 4h6v20h-6V30zm12 0h6v20h-6V30zm12 0h6v20h-6V30zM11 52h42v5H11z' fill='%23f2d6a2'/%3E%3C/svg%3E">
+  <style>
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#160f0b;color:#f6ead5;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{min-height:100vh;background:radial-gradient(circle at 50% -10%,#5b2519 0,#24140e 38%,#100c09 100%)}
+    main{width:min(1240px,100%);margin:auto;padding:clamp(18px,3vw,34px)}
+    header{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;margin-bottom:18px}h1{font-family:Georgia,serif;font-weight:600;font-size:clamp(1.75rem,4vw,3.25rem);line-height:1;margin:0;color:#fff5df}.eyebrow{color:#dfac65;text-transform:uppercase;letter-spacing:.18em;font-size:.75rem;font-weight:700;margin-bottom:8px}.subtitle{color:#cdbca6;margin:.55rem 0 0;font-size:1rem}
+    .controls{display:flex;gap:8px;flex-wrap:wrap}.controls button{font:inherit;color:#f5e6cf;background:#37251c;border:1px solid #694737;border-radius:999px;padding:10px 15px;cursor:pointer;min-height:44px;transition:.2s transform,.2s background}.controls button:hover{background:#4b3125;transform:translateY(-1px)}.controls button.active{background:#b75c38;border-color:#df8d64;color:#fff}.controls button:focus-visible{outline:3px solid #e6b65e;outline-offset:2px}
+    #stage{position:relative;width:100%;height:min(72vh,760px);min-height:520px;overflow:hidden;border:1px solid rgba(233,185,120,.25);border-radius:20px;background:linear-gradient(180deg,rgba(124,69,39,.15),rgba(0,0,0,.12));box-shadow:0 28px 70px rgba(0,0,0,.38)}canvas{display:block;width:100%;height:100%;touch-action:none}.labels{position:absolute;inset:0;pointer-events:none;overflow:hidden}.label{position:absolute;transform:translate(-50%,-100%);padding:5px 9px;border-radius:999px;background:rgba(23,15,11,.88);color:#fff1d8;border:1px solid rgba(237,190,126,.48);font-size:.78rem;white-space:nowrap;box-shadow:0 3px 14px rgba(0,0,0,.3)}
+    .hint{position:absolute;left:14px;bottom:14px;background:rgba(22,15,11,.88);border:1px solid rgba(237,190,126,.3);border-radius:10px;padding:9px 12px;color:#dfcfb9;font-size:.82rem;pointer-events:none}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#d36f47;margin-right:7px}
+    footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#9e8f7d;font-size:.78rem;padding:12px 4px 0}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(max-width:650px){main{padding:14px}header{align-items:flex-start}.controls{width:100%}.controls button{flex:1 1 calc(50% - 4px)}#stage{height:68vh;min-height:500px}.hint{right:14px;text-align:center}}
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div><div class="eyebrow">Ancient Rome</div><h1>Daily Life in a Roman Domus</h1><p class="subtitle">Interactive house and street reconstruction</p></div>
+    <nav class="controls" aria-label="Model viewpoints">
+      <button class="active" type="button" data-view="overview">Overview</button><button type="button" data-view="atrium">Atrium</button><button type="button" data-view="dining">Dining room</button><button type="button" data-view="street">Street market</button>
+    </nav>
+  </header>
+  <section id="stage" aria-label="Rotatable three-dimensional model of a Roman house and street">
+    <div class="labels" aria-hidden="true"></div><div class="hint"><span class="dot"></span>Drag to rotate · scroll or pinch to zoom</div>
+  </section>
+  <footer><span>Roman domus · c. first century CE</span><span>Digital 3D historical representation</span></footer>
+  <p class="sr-only">A rotatable cutaway model showing a Roman home beside a paved street. Features include an atrium and impluvium pool, triclinium dining room, cubicula bedroom, kitchen, peristyle garden, market stall, citizens and household workers.</p>
+</main>
+<script type="module">
+  import * as THREE from 'https://esm.sh/three@0.170.0';
+  import {OrbitControls} from 'https://esm.sh/three@0.170.0/examples/jsm/controls/OrbitControls.js';
+  const stage=document.getElementById('stage'), layer=stage.querySelector('.labels');
+  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(42,1,.1,200);camera.position.set(22,20,27);
+  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;stage.prepend(renderer.domElement);
+  const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.dampingFactor=.07;controls.target.set(0,1,-1);controls.minDistance=11;controls.maxDistance=54;controls.maxPolarAngle=Math.PI*.49;
+  scene.add(new THREE.HemisphereLight(0xffe8bd,0x34251d,2.4));const sun=new THREE.DirectionalLight(0xffdeb0,3.2);sun.position.set(-12,24,12);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-28;sun.shadow.camera.right=28;sun.shadow.camera.top=28;sun.shadow.camera.bottom=-28;scene.add(sun);
+  const mat=(c,r=.84)=>new THREE.MeshStandardMaterial({color:c,roughness:r});const M={sand:mat(0xc9a66b),plaster:mat(0xddc69d),roof:mat(0xaa4e2e),tile:mat(0xc7b08a),water:new THREE.MeshPhysicalMaterial({color:0x3d91a6,roughness:.18,transmission:.12,transparent:true,opacity:.9}),wood:mat(0x70432b),green:mat(0x547c43),stone:mat(0x988b76),cloth:mat(0x8d3150),white:mat(0xe8ddc8)};
+  function box(name,x,y,z,w,h,d,m,parent=scene){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.name=name;o.position.set(x,y,z);o.castShadow=o.receiveShadow=true;parent.add(o);return o}function cyl(x,y,z,r,h,m,parent=scene){const o=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,18),m);o.position.set(x,y,z);o.castShadow=o.receiveShadow=true;parent.add(o);return o}
+  box('Base',0,-.45,0,26,.8,20,M.sand);box('Street',0,.01,7.15,26,.18,5.1,M.stone);for(let x=-12;x<=12;x+=2.6)for(let z=5.1;z<=9.2;z+=1.35){const s=box('',x+(Math.round(z)%2?0:.7),.13,z,2.35,.09,1.08,M.stone);s.rotation.y=(x%2)*.018}box('House floor',0,.02,-2.7,25,.2,14.1,M.tile);
+  const wall=(x,z,w,d,h=4.3)=>box('',x,h/2,z,w,h,d,M.plaster);wall(-12.25,-2.7,.35,14.3);wall(12.25,-2.7,.35,14.3);wall(0,-9.65,24.8,.35);wall(-8.7,4.2,7.1,.35,3.7);wall(8.7,4.2,7.1,.35,3.7);wall(-7.3,-4.8,.25,9.4,3.3);wall(7.3,-4.8,.25,9.4,3.3);wall(-9.8,-.2,5.2,.25,3.3);wall(9.8,-.2,5.2,.25,3.3);for(let x=-11.5;x<=11.5;x+=1.15){const t=box('',x,4.46,-9.55,1,.22,1.2,M.roof);t.rotation.x=.1}
+  box('Impluvium rim',0,.22,-1.2,6.3,.34,4.1,M.stone);box('Impluvium water',0,.42,-1.2,5.55,.08,3.35,M.water);[[-4.3,-4],[4.3,-4],[-4.3,1.6],[4.3,1.6]].forEach(([x,z])=>{cyl(x,1.75,z,.34,3.5,M.stone);box('',x,3.53,z,.9,.18,.9,M.stone);box('',x,.12,z,.8,.18,.8,M.stone)});
+  box('Dining couch',-10,.65,-5.2,1.5,1.1,5,M.cloth);box('Dining couch',-8.7,.65,-7.6,3.9,1.1,1.35,M.cloth);box('Dining table',-9.5,1.05,-5.9,2.2,.18,2.2,M.wood);cyl(-9.5,.55,-5.9,.28,1,M.wood);for(let i=0;i<3;i++)cyl(-10.15+i*.65,1.25,-5.9,.2,.12,[M.sand,M.green,M.roof][i]);
+  box('Bed',9.7,.55,-6.5,4.1,.85,2.2,M.wood);box('Blanket',9.7,1.03,-6.5,3.7,.16,1.85,M.cloth);box('Chest',10.7,.62,-3.7,1.6,1.1,1.2,M.wood);box('Kitchen hearth',9.6,.62,1.8,3.5,1.1,1.4,M.stone);box('Kitchen fire',9.6,1.24,1.8,1.1,.16,.75,M.roof);cyl(11.1,.72,.4,.48,1.2,M.roof);
+  box('Garden',0,.16,-7.4,6.8,.25,3.2,M.green);[-2.4,0,2.4].forEach((x,i)=>{cyl(x,.75,-7.4,.12,1.35,M.wood);const c=new THREE.Mesh(new THREE.SphereGeometry(.72,14,10),M.green);c.position.set(x,1.65,-7.4+(i%2?.35:-.25));c.castShadow=true;scene.add(c)});
+  const stall=new THREE.Group();stall.position.set(-7.5,0,7.2);scene.add(stall);box('Market counter',0,1.05,0,4.2,.35,1.3,M.wood,stall);[-1.8,1.8].forEach(x=>box('',x,2.4,0,.18,3.1,.18,M.wood,stall));const awning=box('Market awning',0,3.85,0,4.8,.18,2.3,M.cloth,stall);awning.rotation.z=-.05;for(let i=0;i<7;i++){const p=new THREE.Mesh(new THREE.SphereGeometry(.18,10,8),i%2?M.green:M.roof);p.position.set(-1.4+(i%4)*.8,1.34,(i%2-.5)*.45);stall.add(p)}
+  function person(x,z,m,s=1){const g=new THREE.Group();g.position.set(x,0,z);const b=new THREE.Mesh(new THREE.CylinderGeometry(.25,.56,1.7,16),m);b.position.y=1.12;b.castShadow=true;g.add(b);const h=new THREE.Mesh(new THREE.SphereGeometry(.3,16,12),M.sand);h.position.y=2.25;h.castShadow=true;g.add(h);g.scale.setScalar(s);scene.add(g)}person(-1.8,2.7,M.cloth,1.05);person(2.2,-5.5,M.roof,.95);person(-5.5,7.1,M.white);person(5,6.6,M.cloth,.9);
+  function amphora(x,z,s=.7){const g=new THREE.Group(),b=new THREE.Mesh(new THREE.SphereGeometry(.52,14,12),M.roof);b.scale.set(.72,1.15,.72);b.position.y=.72;g.add(b);cyl(0,1.38,0,.22,.6,M.roof,g);g.position.set(x,0,z);g.scale.setScalar(s);scene.add(g)}amphora(5.7,-8.4);amphora(6.4,-8.4,.55);amphora(-4.8,3.2,.6);
+  const labels=[['Atrium',0,3.7,-1.2],['Impluvium',0,.75,-1.2],['Triclinium',-9.6,2.5,-5.8],['Cubicula',9.6,2.5,-6],['Kitchen',9.7,2.55,1.7],['Peristyle garden',0,2.9,-7.4],['Market stall',-7.5,4.6,7.2],['Roman street',5,.8,7.5]].map(([name,x,y,z])=>{const e=document.createElement('span');e.className='label';e.textContent=name;layer.appendChild(e);return{e,pos:new THREE.Vector3(x,y,z)}});
+  const views={overview:{p:[22,20,27],t:[0,1,-1]},atrium:{p:[10,10,12],t:[0,.7,-1.3]},dining:{p:[-2,7,-1],t:[-9.4,.9,-5.8]},street:{p:[-2,8,19],t:[-5,1.5,6.5]}};let tween=null;document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>{const v=views[b.dataset.view];tween={start:performance.now(),sp:camera.position.clone(),st:controls.target.clone(),ep:new THREE.Vector3(...v.p),et:new THREE.Vector3(...v.t)};document.querySelectorAll('[data-view]').forEach(x=>x.classList.toggle('active',x===b))}));
+  function resize(){const w=stage.clientWidth,h=stage.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}new ResizeObserver(resize).observe(stage);resize();function animate(now){requestAnimationFrame(animate);if(tween){const q=Math.min(1,(now-tween.start)/750),e=1-Math.pow(1-q,3);camera.position.lerpVectors(tween.sp,tween.ep,e);controls.target.lerpVectors(tween.st,tween.et,e);if(q===1)tween=null}controls.update();renderer.render(scene,camera);const w=stage.clientWidth,h=stage.clientHeight;labels.forEach(l=>{const p=l.pos.clone().project(camera),show=p.z<1&&p.z>-1;l.e.style.display=show?'block':'none';l.e.style.left=(p.x*.5+.5)*w+'px';l.e.style.top=(-p.y*.5+.5)*h+'px'})}requestAnimationFrame(animate);
+</script>
+</body>
+</html>
